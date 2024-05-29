@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 const Update = ({ display, update }) => {
+  let [arr,setArr] = useState(["input"])
+
   useEffect(() => {
     setInputs({
       title: update.title,
       body: update.body,
-    });
+    })
   }, [update]);
 
   const [Inputs, setInputs] = useState({
@@ -19,8 +21,10 @@ const Update = ({ display, update }) => {
   };
   const submit = async () => {
     await axios
-      .put(`${window.location.origin}/api/v2/updateTask/${update._id}`, Inputs)
+      .put(`http://localhost:1000/api/v2/updateTask/${update._id}`, Inputs)
       .then((response) => {
+        console.log(window.location.origin);
+        setArr(a=>{return([...a,"in"])})
         toast.success(response.data.message);
       });
 

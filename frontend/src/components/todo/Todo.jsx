@@ -8,6 +8,7 @@ import axios from "axios";
 let id = sessionStorage.getItem("id");
 let toUpdateArray = [];
 const Todo = () => {
+  let [arr,setArr] = useState(["iugc"])
   const [Inputs, setInputs] = useState({
     title: "",
     body: "",
@@ -27,14 +28,16 @@ const Todo = () => {
     } else {
       if (id) {
         await axios
-          .post(`${window.location.origin}/api/v2/addTask`, {
+          .post(`http://localhost:1000/api/v2/addTask`, {
             title: Inputs.title,
             body: Inputs.body,
             id: id,
           })
           .then((response) => {
             console.log(response);
-          });
+          }).catch(err=>{
+            console.log(err);
+          })
         setInputs({ title: "", body: "" });
         toast.success("Your Task Is Added");
       } else {
@@ -49,7 +52,7 @@ const Todo = () => {
   const del = async (Cardid) => {
     if (id) {
       await axios
-        .delete(`${window.location.origin}/api/v2/deleteTask/${Cardid}`, {
+        .delete(`http://localhost:1000/api/v2/deleteTask/${Cardid}`, {
           data: { id: id },
         })
         .then(() => {
@@ -66,19 +69,27 @@ const Todo = () => {
   const update = (value) => {
     toUpdateArray = Array[value];
   };
+  
   useEffect(() => {
     if (id) {
       const fetch = async () => {
         await axios
-          .get(`${window.location.origin}/api/v2/getTasks/${id}`)
+          .get(`http://localhost:1000/api/v2/getTasks/${id}`)
           .then((response) => {
             setArray(response.data.list);
-          });
+          }).catch(err=>{
+            console.log(err);
+          })
       };
       fetch();
     }
+  console.log("1");
   }, [submit]);
 
+  setInterval(() => {
+  
+  }, 5000);
+ 
   return (
     <>
       <div className="todo">
@@ -105,7 +116,7 @@ const Todo = () => {
             />
           </div>
           <div className=" w-50 w-100 d-flex justify-content-end my-3">
-            <button className="home-btn px-2 py-1" onClick={submit}>
+            <button className="home-btn px-2 py-1" onClick={()=>submit()}>
               Add
             </button>
           </div>
